@@ -2,7 +2,9 @@ package me.tahacheji.mafana.util;
 
 import me.tahacheji.mafana.MafanaNPC;
 import me.tahacheji.mafana.data.MafanaCitizens;
+import me.tahacheji.mafana.data.MafanaTask;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 
 public class NPCUtil {
@@ -19,5 +21,13 @@ public class NPCUtil {
             }
         }
         return null;
+    }
+
+    public void addCoolDown(MafanaTask mafanaTask) {
+        System.out.println(7);
+        MafanaNPC.getInstance().getTaskCoolDown().add(mafanaTask);
+        Bukkit.getScheduler().runTaskLater(MafanaNPC.getInstance(), () -> {
+            MafanaNPC.getInstance().getTaskCoolDown().remove(mafanaTask);
+        }, 20L * mafanaTask.getCoolDown());
     }
 }
