@@ -12,6 +12,8 @@ public class MafanaTask implements NPCTaskEvents{
     private Location location;
     private Player player;
 
+    private NPC mafanaCitizens;
+
     private int coolDown;
 
     public MafanaTask(Material block, Location location, Player player) {
@@ -19,6 +21,11 @@ public class MafanaTask implements NPCTaskEvents{
         this.location = location;
         this.player = player;
     }
+
+    public MafanaTask(NPC mafanaCitizens) {
+        this.mafanaCitizens = mafanaCitizens;
+    }
+
 
     public MafanaTask(Player player) {
         this.player = player;
@@ -50,5 +57,9 @@ public class MafanaTask implements NPCTaskEvents{
 
     public Material getBlock() {
         return block;
+    }
+
+    public NPC getMafanaCitizens() {
+        return mafanaCitizens;
     }
 }

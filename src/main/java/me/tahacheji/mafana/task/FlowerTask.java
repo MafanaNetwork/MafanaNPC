@@ -23,12 +23,11 @@ public class FlowerTask extends MafanaTask {
     @Override
     public boolean onArrivalBlock(MafanaTask mafanaTask, MafanaCitizens npc, Material material, Block block) {
         if (material == targetBlockType) {
-            npc.talkNPC("Hello poppy", 5);
+            //npc.talkNPC("Hello poppy", 5);
             npc.runTo(block.getLocation());
             npc.lookAtLocation(block.getLocation(), false);
             npc.sneakNPC();
 
-            // Schedule the execution of executeTaskEvents after a delay of 15 seconds (20 ticks per second)
             Bukkit.getScheduler().runTaskLater(MafanaNPC.getInstance(), () -> {
                 npc.executeTaskEvents();
                 npc.unSneakNPC();

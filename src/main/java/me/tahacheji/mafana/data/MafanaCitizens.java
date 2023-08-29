@@ -3,6 +3,7 @@ package me.tahacheji.mafana.data;
 import me.tahacheji.mafana.MafanaNPC;
 import me.tahacheji.mafana.npc.Mafana;
 import me.tahacheji.mafana.util.ConvoTrait;
+import me.tahacheji.mafana.util.NPCUtil;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.npc.NPC;
@@ -100,8 +101,8 @@ public class MafanaCitizens {
         npc.data().set(NPC.Metadata.SNEAKING, false);
     }
 
-    public void talkNPC(String message, int time) {
-        MafanaNPC.getInstance().getMessageManager().sendMessage(npc, message, time);
+    public void talkNPC(NPCMessage... npcMessages) {
+        MafanaNPC.getInstance().getMessageManager().sendMessage(npcMessages);
     }
 
     public void swingMainHand() {
@@ -349,6 +350,21 @@ public class MafanaCitizens {
             if (taskEvent.onArrivalLocation(taskEvent, this, currentLocation)) {
                 taskExecuted = true;
                 break;
+            }
+        }
+
+        if(!taskExecuted) {
+            for(MafanaTask task : taskEvents) {
+                for (Entity npc : npc.getEntity().getLocation().getNearbyEntities(5, 5, 5)) {
+                    if (new NPCUtil().isNPC(npc)) {
+                        NPC x = CitizensAPI.getNPCRegistry().getNPC(npc);
+                        MafanaCitizens m = new NPCUtil().getMafanaCitizens(x);
+                        if(task.onArrivalNPC(task, this, m)) {
+                            taskExecuted = true;
+                            break;
+                        }
+                    }
+                }
             }
         }
 

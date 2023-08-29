@@ -28,6 +28,6 @@ public class Mafana extends MafanaCitizens {
         setTaskEvents(new FlowerTask(Material.POPPY));
 
         startCitizen();
-        MafanaNPC.getInstance().getMafanaCitizensList().add(this);
+        MafanaNPC.getInstance().getMafanaCitizens().add(this);
     }
 }

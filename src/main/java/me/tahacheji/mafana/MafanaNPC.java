@@ -9,7 +9,6 @@ import me.tahacheji.mafana.event.PlayerBreakBlock;
 import me.tahacheji.mafana.event.PlayerJoin;
 import me.tahacheji.mafana.event.PlayerTalk;
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,7 +18,7 @@ import java.util.List;
 public final class MafanaNPC extends JavaPlugin {
 
     private static MafanaNPC mafanaNPC;
-    private List<MafanaCitizens> mafanaCitizensList = new ArrayList<>();
+    private List<MafanaCitizens> mafanaCitizens = new ArrayList<>();
     private MessageManager messageManager;
 
     private List<MafanaTask> taskCoolDown = new ArrayList<>();
@@ -44,8 +43,8 @@ public final class MafanaNPC extends JavaPlugin {
         return messageManager;
     }
 
-    public List<MafanaCitizens> getMafanaCitizensList() {
-        return mafanaCitizensList;
+    public List<MafanaCitizens> getMafanaCitizens() {
+        return mafanaCitizens;
     }
 
     public static MafanaNPC getInstance() {

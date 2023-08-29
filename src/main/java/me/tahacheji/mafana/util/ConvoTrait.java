@@ -95,7 +95,7 @@ public class ConvoTrait extends Trait {
         this.conversation.append(response.stripLeading());
         if (playerMessage != null) p.sendMessage("You: " + playerMessage);
         p.sendMessage("NPC: " + response);
-        new NPCUtil().getMafanaCitizens(npc).talkNPC(response, 5);
+        //new NPCUtil().getMafanaCitizens(npc).talkNPC(response, 5);
     }
 
 }

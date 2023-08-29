@@ -15,7 +15,7 @@ public class NPCUtil {
     }
 
     public MafanaCitizens getMafanaCitizens(NPC npc) {
-        for(MafanaCitizens mafanaCitizens : MafanaNPC.getInstance().getMafanaCitizensList()) {
+        for(MafanaCitizens mafanaCitizens : MafanaNPC.getInstance().getMafanaCitizens()) {
             if(mafanaCitizens.getNpc().getUniqueId().toString().equalsIgnoreCase(npc.getUniqueId().toString())) {
                 return mafanaCitizens;
             }

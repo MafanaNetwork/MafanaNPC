@@ -16,7 +16,11 @@ public interface NPCTaskEvents {
     }
     default boolean onArrivalPlayer(MafanaTask mafanaTask, MafanaCitizens npc, Player v1) {
         return false;
-       }
+    }
+
+    default boolean onArrivalNPC(MafanaTask mafanaTask, MafanaCitizens npc, MafanaCitizens v1) {
+        return false;
+    }
 
     default boolean onArrivalBlock(MafanaTask mafanaTask, MafanaCitizens npc, Material v1, Block block) {
         return false;

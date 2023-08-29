@@ -2,6 +2,7 @@ package me.tahacheji.mafana.command;
 
 import me.tahacheji.mafana.MafanaNPC;
 import me.tahacheji.mafana.data.MafanaCitizens;
+import me.tahacheji.mafana.data.NPCMessage;
 import me.tahacheji.mafana.npc.Mafana;
 import me.tahacheji.mafana.util.NPCUtil;
 import net.citizensnpcs.api.CitizensAPI;
@@ -25,7 +26,7 @@ public class TestCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("spawn")) {
 
                 MafanaCitizens mafanaCitizens = new MafanaCitizens("test");
-                MafanaNPC.getInstance().getMafanaCitizensList().add(mafanaCitizens);
+                MafanaNPC.getInstance().getMafanaCitizens().add(mafanaCitizens);
                 String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                 mafanaCitizens.spawnNPC(player.getLocation(), message);
 
@@ -39,6 +40,18 @@ public class TestCommand implements CommandExecutor {
                         NPC x = CitizensAPI.getNPCRegistry().getNPC(npc);
                         MafanaCitizens mafanaCitizens = new NPCUtil().getMafanaCitizens(x);
                         mafanaCitizens.runTo(player.getLocation());
+                    }
+                }
+            }
+            if(args[0].equalsIgnoreCase("talk")) {
+                for (Entity npc : player.getNearbyEntities(5, 5, 5)) {
+                    if (new NPCUtil().isNPC(npc)) {
+                        NPC x = CitizensAPI.getNPCRegistry().getNPC(npc);
+                        MafanaCitizens mafanaCitizens = new NPCUtil().getMafanaCitizens(x);
+                        mafanaCitizens.talkNPC(new NPCMessage(x, "okay", 100, 5),
+                                new NPCMessage(x, "so", 100, 5),
+                                new NPCMessage(x, "ummmmm", 100, 10),
+                                new NPCMessage(x, "alright", 5, 15));
                     }
                 }
             }
