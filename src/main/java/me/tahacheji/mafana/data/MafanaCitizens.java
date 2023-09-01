@@ -22,6 +22,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -255,13 +256,16 @@ public class MafanaCitizens {
     }
 
     private boolean isWalkingTo = false;
+    private BukkitTask walkTo = null;
+    private MafanaTask currentTask = null;
+    private long resumeWalkTime = 0;
 
     public void startCitizen() {
         walkToNextPoint();
     }
 
     public void walkToNextPoint() {
-        if (isWalkingTo) {
+        if (isWalkingTo && walkTo != null) {
             return;
         }
 
@@ -273,13 +277,11 @@ public class MafanaCitizens {
 
         long walkTimeInTicks = Math.round(distance / walkingSpeed * 20); // Convert seconds to ticks
         long totalDelay = walkTimeInTicks + (20 * 2); // Add 2 seconds (20 ticks)
-
+        walkTo(nextPoint);
         isWalkingTo = true;
-        walkTo(nextPoint); // Start walking to the next point
-
-        Bukkit.getScheduler().runTaskLater(MafanaNPC.getInstance(), () -> {
+        walkTo = Bukkit.getScheduler().runTaskLater(MafanaNPC.getInstance(), () -> {
             isWalkingTo = false;
-            walkToNextPoint(); // Continue to the next point after reaching the current one
+            walkToCurrentTask(); // Continue to the next point or resume the current task
         }, totalDelay);
     }
 
@@ -287,6 +289,145 @@ public class MafanaCitizens {
         return isWalkingTo;
     }
 
+    public void executeTaskEvents() {
+        Location currentLocation = getEntity().getLocation();
+        MafanaTask mafanaTask = null;
+        boolean taskExecuted = false;
+
+        for (MafanaTask taskEvent : taskEvents) {
+            if(MafanaNPC.getInstance().getTaskCoolDown().contains(taskEvent)) {
+                continue;
+            }
+            if (taskEvent.onArrivalLocation(taskEvent, this, currentLocation)) {
+                taskExecuted = true;
+                mafanaTask = taskEvent;
+                break;
+            }
+        }
+
+        if(!taskExecuted) {
+            for(MafanaTask task : taskEvents) {
+                for (Entity npc : npc.getEntity().getLocation().getNearbyEntities(5, 5, 5)) {
+                    if (new NPCUtil().isNPC(npc)) {
+                        NPC x = CitizensAPI.getNPCRegistry().getNPC(npc);
+                        MafanaCitizens m = new NPCUtil().getMafanaCitizens(x);
+                        if(task.onArrivalNPC(task, this, m)) {
+                            taskExecuted = true;
+                            mafanaTask = task;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!taskExecuted) {
+            for (Player player : getNearbyPlayers(5)) {
+                if (executePlayerTask(player) != null) {
+                    mafanaTask = executePlayerTask(player);
+                    Objects.requireNonNull(executePlayerTask(player)).onArrivalPlayer(executePlayerTask(player), this, player);
+                    taskExecuted = true;
+                    break;
+                }
+            }
+        }
+
+        if (!taskExecuted) {
+            for (Block block : getNearbyBlocks(15)) {
+                if (executeBlockTask(block) != null) {
+                    mafanaTask = executeBlockTask(block);
+                    executeBlockTask(block).onArrivalBlock(executeBlockTask(block), this, executeBlockTask(block).getBlock(), block);
+                    taskExecuted = true;
+                    break;
+                }
+            }
+        }
+
+        if (taskExecuted) {
+            if(mafanaTask != null) {
+                currentTask = mafanaTask;
+                resumeWalkTime = System.currentTimeMillis() + (mafanaTask.getUntilWalk() * 1000L);
+            }
+        }
+    }
+
+    private void walkToCurrentTask() {
+        // Check if there's a task to resume
+        if (currentTask != null) {
+            long currentTime = System.currentTimeMillis();
+
+            // Check if it's time to resume walking
+            if (currentTime >= resumeWalkTime) {
+                currentTask = null; // Reset the current task
+                walkToNextPoint(); // Continue walking to the next point
+            } else {
+                // Schedule another attempt to resume walking
+                Bukkit.getScheduler().runTaskLater(MafanaNPC.getInstance(), this::walkToCurrentTask, 20L); // Delay of 1 second
+            }
+        } else {
+            walkToNextPoint(); // No task to resume, continue walking to the next point
+        }
+    }
+
+
+    private List<Player> getNearbyPlayers(int radius) {
+        List<Player> nearbyPlayers = new ArrayList<>();
+        Location currentLocation = getEntity().getLocation();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getLocation().distance(currentLocation) <= radius) {
+                nearbyPlayers.add(player);
+            }
+        }
+
+        return nearbyPlayers;
+    }
+
+    private MafanaTask executePlayerTask(Player player) {
+        for (MafanaTask taskEvent : taskEvents) {
+            if(MafanaNPC.getInstance().getTaskCoolDown().contains(taskEvent)) {
+                continue;
+            }
+            if (taskEvent.getPlayer() != null &&
+                    taskEvent.getPlayer().equals(player) &&
+                    player.getLocation().distance(getEntity().getLocation()) <= 5) {
+                return taskEvent;
+            }
+        }
+        return null;
+    }
+
+    private MafanaTask executeBlockTask(Block block) {
+        for (MafanaTask taskEvent : taskEvents) {
+            if(MafanaNPC.getInstance().getTaskCoolDown().contains(taskEvent)) {
+                continue;
+            }
+            if (taskEvent.getBlock() != null &&
+                    taskEvent.getBlock() == block.getType()) {
+                return taskEvent;
+            }
+        }
+        return null;
+    }
+
+    private List<Block> getNearbyBlocks(int radius) {
+        List<Block> nearbyBlocks = new ArrayList<>();
+        Location currentLocation = getEntity().getLocation();
+        World world = currentLocation.getWorld();
+
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    Block block = world.getBlockAt(currentLocation.getBlockX() + x,
+                            currentLocation.getBlockY() + y,
+                            currentLocation.getBlockZ() + z);
+                    nearbyBlocks.add(block);
+                }
+            }
+        }
+
+        return nearbyBlocks;
+    }
 
     public List<Location> getBlockLocationsWithinBoundary(Material blockType) {
         List<Location> validBlockLocations = new ArrayList<>();
@@ -336,119 +477,6 @@ public class MafanaCitizens {
         }
 
         return validBlockLocations;
-    }
-
-    public void executeTaskEvents() {
-        Location currentLocation = getEntity().getLocation();
-
-        boolean taskExecuted = false;
-
-        for (MafanaTask taskEvent : taskEvents) {
-            if(MafanaNPC.getInstance().getTaskCoolDown().contains(taskEvent)) {
-                continue;
-            }
-            if (taskEvent.onArrivalLocation(taskEvent, this, currentLocation)) {
-                taskExecuted = true;
-                break;
-            }
-        }
-
-        if(!taskExecuted) {
-            for(MafanaTask task : taskEvents) {
-                for (Entity npc : npc.getEntity().getLocation().getNearbyEntities(5, 5, 5)) {
-                    if (new NPCUtil().isNPC(npc)) {
-                        NPC x = CitizensAPI.getNPCRegistry().getNPC(npc);
-                        MafanaCitizens m = new NPCUtil().getMafanaCitizens(x);
-                        if(task.onArrivalNPC(task, this, m)) {
-                            taskExecuted = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!taskExecuted) {
-            for (Player player : getNearbyPlayers(5)) {
-                if (executePlayerTask(player)) {
-                    taskExecuted = true;
-                    break;
-                }
-            }
-        }
-
-        if (!taskExecuted) {
-            for (Block block : getNearbyBlocks(15)) {
-                if (executeBlockTask(block)) {
-                    taskExecuted = true;
-                    break;
-                }
-            }
-        }
-
-        if (!taskExecuted) {
-            walkToNextPoint();
-        }
-    }
-
-
-    private List<Player> getNearbyPlayers(int radius) {
-        List<Player> nearbyPlayers = new ArrayList<>();
-        Location currentLocation = getEntity().getLocation();
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getLocation().distance(currentLocation) <= radius) {
-                nearbyPlayers.add(player);
-            }
-        }
-
-        return nearbyPlayers;
-    }
-
-    private boolean executePlayerTask(Player player) {
-        for (MafanaTask taskEvent : taskEvents) {
-            if(MafanaNPC.getInstance().getTaskCoolDown().contains(taskEvent)) {
-                continue;
-            }
-            if (taskEvent.getPlayer() != null &&
-                    taskEvent.getPlayer().equals(player) &&
-                    player.getLocation().distance(getEntity().getLocation()) <= 5) {
-                return taskEvent.onArrivalPlayer(taskEvent, this, player);
-            }
-        }
-        return false;
-    }
-
-    private boolean executeBlockTask(Block block) {
-        for (MafanaTask taskEvent : taskEvents) {
-            if(MafanaNPC.getInstance().getTaskCoolDown().contains(taskEvent)) {
-                continue;
-            }
-            if (taskEvent.getBlock() != null &&
-                    taskEvent.getBlock() == block.getType()) {
-                return taskEvent.onArrivalBlock(taskEvent, this, taskEvent.getBlock(), block);
-            }
-        }
-        return false;
-    }
-
-    private List<Block> getNearbyBlocks(int radius) {
-        List<Block> nearbyBlocks = new ArrayList<>();
-        Location currentLocation = getEntity().getLocation();
-        World world = currentLocation.getWorld();
-
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    Block block = world.getBlockAt(currentLocation.getBlockX() + x,
-                            currentLocation.getBlockY() + y,
-                            currentLocation.getBlockZ() + z);
-                    nearbyBlocks.add(block);
-                }
-            }
-        }
-
-        return nearbyBlocks;
     }
     public List<MafanaTask> getTaskEvents() {
         return taskEvents;

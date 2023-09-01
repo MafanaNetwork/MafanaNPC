@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Mafana extends MafanaCitizens {
     public Mafana() {
         super("Mafana");
-        spawnNPC(new Location(Bukkit.getWorld("world"), 5, 121, -0.5), "Guy");
+        spawnNPC(new Location(Bukkit.getWorld("world"), 5, 121, -0.5), "Dumb guy");
 
         setBoundaryX(new Location(Bukkit.getWorld("world"), 3, 120, -3));
         setBoundaryY(new Location(Bukkit.getWorld("world"), 21, 120, 12));

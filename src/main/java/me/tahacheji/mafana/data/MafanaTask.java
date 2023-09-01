@@ -16,6 +16,8 @@ public class MafanaTask implements NPCTaskEvents{
 
     private int coolDown;
 
+    private int untilWalk;
+
     public MafanaTask(Material block, Location location, Player player) {
         this.block = block;
         this.location = location;
@@ -49,6 +51,14 @@ public class MafanaTask implements NPCTaskEvents{
 
     public void setCoolDown(int coolDown) {
         this.coolDown = coolDown;
+    }
+
+    public void setUntilWalk(int untilWalk) {
+        this.untilWalk = untilWalk;
+    }
+
+    public int getUntilWalk() {
+        return untilWalk;
     }
 
     public int getCoolDown() {

@@ -59,7 +59,7 @@ public class ConvoTrait extends Trait {
     private void startConversation(Player p){
         this.talkingTo = p;
         this.conversation = new StringBuilder(this.CONVO_STARTER);
-        //getResponse(this.talkingTo, null);
+        getResponse(this.talkingTo, null);
     }
 
     public void stopConversation(){
@@ -77,6 +77,7 @@ public class ConvoTrait extends Trait {
     }
 
     public void getResponse(Player p, String playerMessage){
+        /*
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
 
         OpenAiService service = new OpenAiService("");
@@ -96,6 +97,7 @@ public class ConvoTrait extends Trait {
         if (playerMessage != null) p.sendMessage("You: " + playerMessage);
         p.sendMessage("NPC: " + response);
         //new NPCUtil().getMafanaCitizens(npc).talkNPC(response, 5);
+         */
     }
 
 }

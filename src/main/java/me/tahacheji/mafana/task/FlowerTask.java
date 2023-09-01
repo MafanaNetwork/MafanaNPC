@@ -18,6 +18,7 @@ public class FlowerTask extends MafanaTask {
         super(targetBlockType);
         this.targetBlockType = targetBlockType;
         setCoolDown(30);
+        setUntilWalk(10);
     }
 
     @Override
@@ -29,7 +30,6 @@ public class FlowerTask extends MafanaTask {
             npc.sneakNPC();
 
             Bukkit.getScheduler().runTaskLater(MafanaNPC.getInstance(), () -> {
-                npc.executeTaskEvents();
                 npc.unSneakNPC();
             }, 20 * 5);
             new NPCUtil().addCoolDown(this);

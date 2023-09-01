@@ -49,12 +49,10 @@ public class PlayerTalk implements Listener {
             var trait = npc.getTraitNullable(ConvoTrait.class);
             var talkingTo = trait.getTalkingTo();
 
-            //See if the NPC is talking to the player
             if (talkingTo == null || !talkingTo.equals(e.getPlayer())){
                 continue;
             }
 
-            //If the player is talking to the NPC but is not within 20 blocks, stop the conversation
             if (npc.getEntity().getLocation().distance(e.getPlayer().getLocation()) > 20){
                 trait.stopConversation();
             }else{
@@ -62,7 +60,7 @@ public class PlayerTalk implements Listener {
                 trait.addMessage(e.getMessage());
 
                 CompletableFuture.runAsync(() -> {
-                    //trait.getResponse(talkingTo, e.getMessage());
+                    trait.getResponse(talkingTo, e.getMessage());
                 });
                 e.setCancelled(true);
             }
