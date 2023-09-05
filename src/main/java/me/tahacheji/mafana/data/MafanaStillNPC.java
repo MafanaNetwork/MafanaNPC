@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class MafanaStillNPC {
+public class MafanaStillNPC implements NPCTaskEvents {
 
     private final String name;
 

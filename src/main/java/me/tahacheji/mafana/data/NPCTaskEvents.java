@@ -1,6 +1,9 @@
 package me.tahacheji.mafana.data;
 
 import me.tahacheji.mafana.MafanaNPC;
+import net.citizensnpcs.api.event.NPCClickEvent;
+import net.citizensnpcs.api.event.NPCLeftClickEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,6 +26,18 @@ public interface NPCTaskEvents {
     }
 
     default boolean onArrivalBlock(MafanaTask mafanaTask, MafanaCitizens npc, Material v1, Block block) {
+        return false;
+    }
+
+    default boolean rightClickNPC(NPCRightClickEvent event, MafanaStillNPC mafanaStillNPC, Player player) {
+        return false;
+    }
+
+    default boolean leftClickNPC(NPCLeftClickEvent event, MafanaStillNPC mafanaStillNPC, Player player) {
+        return false;
+    }
+
+    default boolean clickNPC(NPCClickEvent event, MafanaStillNPC mafanaStillNPC, Player player) {
         return false;
     }
 
