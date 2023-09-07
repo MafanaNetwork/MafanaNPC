@@ -1,4 +1,4 @@
-depend: [Citizens]
+depend: [Citizens, Sentinel]
 name: MafanaNPC_AI
 version: '${project.version}'
 main: me.tahacheji.mafana.MafanaNPC

@@ -1,6 +1,7 @@
 package me.tahacheji.mafana.event;
 
 import me.tahacheji.mafana.data.MafanaCitizens;
+import me.tahacheji.mafana.npc.AngryChicken;
 import me.tahacheji.mafana.util.ConvoTrait;
 import me.tahacheji.mafana.util.NPCUtil;
 import net.citizensnpcs.api.CitizensAPI;
@@ -11,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.concurrent.CompletableFuture;
 
