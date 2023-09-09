@@ -7,6 +7,7 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -33,7 +34,7 @@ public class MafanaStillNPC implements NPCTaskEvents {
 
     public MafanaStillNPC(String name) {
         this.name = name;
-        this.npc = registry.createNPC(EntityType.PLAYER, name);
+        this.npc = registry.createNPC(EntityType.PLAYER, ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "NPC" + ChatColor.DARK_GRAY + "] " + name);
         this.npcUUID = npc.getUniqueId();
     }
 

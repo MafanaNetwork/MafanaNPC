@@ -5,13 +5,12 @@ import me.tahacheji.mafana.util.ConvoTrait;
 import me.tahacheji.mafana.util.NPCUtil;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.ai.Navigator;
+import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.trait.SkinTrait;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.type.Door;
@@ -45,11 +44,12 @@ public class MafanaCitizens {
     private List<MafanaTask> taskEvents = new ArrayList<>();
     private Location boundaryX;
     private Location boundaryY;
+    public final NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
 
 
     public MafanaCitizens(String name) {
         this.name = name;
-        this.npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, name);
+        this.npc = registry.createNPC(EntityType.PLAYER, ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "Citizen" + ChatColor.DARK_GRAY + "] " + name);
         this.npcUUID = npc.getUniqueId();
     }
 
