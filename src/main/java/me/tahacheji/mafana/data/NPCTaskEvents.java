@@ -26,6 +26,10 @@ public interface NPCTaskEvents {
         return false;
     }
 
+    default boolean talkNextToNPC(String s, Player player, MafanaStillNPC mafanaStillNPC) {
+        return false;
+    }
+
     default boolean rightClickNPC(NPCRightClickEvent event, MafanaStillNPC mafanaStillNPC, Player player) {
         return false;
     }
