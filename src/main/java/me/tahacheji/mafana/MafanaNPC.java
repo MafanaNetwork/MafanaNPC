@@ -1,10 +1,7 @@
 package me.tahacheji.mafana;
 
 import me.tahacheji.mafana.command.TestCommand;
-import me.tahacheji.mafana.data.MafanaCitizens;
-import me.tahacheji.mafana.data.MafanaStillNPC;
-import me.tahacheji.mafana.data.MafanaTask;
-import me.tahacheji.mafana.data.MessageManager;
+import me.tahacheji.mafana.data.*;
 import me.tahacheji.mafana.event.PlayerRightClick;
 import me.tahacheji.mafana.event.PlayerTalk;
 import me.tahacheji.mafana.util.ConvoTrait;
@@ -24,15 +21,23 @@ public final class MafanaNPC extends JavaPlugin {
 
     private List<MafanaTask> taskCoolDown = new ArrayList<>();
 
+    private MafanaNPCData mafanaNPCData;
+
     @Override
     public void onEnable() {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ConvoTrait.class));
         mafanaNPC = this;
         messageManager = new MessageManager();
+        mafanaNPCData = new MafanaNPCData();
+        mafanaNPCData.connect();
         getServer().getPluginManager().registerEvents(new PlayerRightClick(), this);
         getServer().getPluginManager().registerEvents(new PlayerTalk(), this);
         getCommand("testnpc").setExecutor(new TestCommand());
 
+    }
+
+    public static MafanaNPC getMafanaNPC() {
+        return mafanaNPC;
     }
 
     public List<MafanaStillNPC> getMafanaStillNPCS() {

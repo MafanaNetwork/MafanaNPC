@@ -1,5 +1,6 @@
 package me.tahacheji.mafana.data;
 
+import me.tahacheji.mafana.util.NPCUtil;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
@@ -35,7 +36,7 @@ public class MafanaStillNPC implements NPCTaskEvents {
     public MafanaStillNPC(String name) {
         this.name = name;
         this.npc = registry.createNPC(EntityType.PLAYER, ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "NPC" + ChatColor.DARK_GRAY + "] " + name);
-        this.npcUUID = npc.getUniqueId();
+        this.npcUUID = new NPCUtil().stringToUUID(name);
     }
 
     public void spawnNPC(Location location) {

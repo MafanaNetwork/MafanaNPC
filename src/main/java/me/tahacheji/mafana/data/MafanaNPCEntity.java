@@ -29,7 +29,9 @@ public class MafanaNPCEntity implements NPCTaskEvents{
 
     private Location defaultPointLocation;
 
-    private List<NPCMessage> npcDialog = new ArrayList<>();
+    private List<NPCMessage> randomNPCDialog = new ArrayList<>();
+
+    private List<NPCMessage> NPCDialog = new ArrayList<>();
 
     private SentinelTrait sentinel;
     public final NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
@@ -40,6 +42,7 @@ public class MafanaNPCEntity implements NPCTaskEvents{
         npc.addTrait(SentinelTrait.class);
         sentinel = npc.getOrAddTrait(SentinelTrait.class);
         this.npcUUID = npc.getUniqueId();
+
     }
 
     public void spawnNPC(Location location) {
@@ -171,30 +174,41 @@ public class MafanaNPCEntity implements NPCTaskEvents{
     }
 
     public void addNPCDialog(NPCMessage s) {
-        getNpcDialog().add(s);
+        getNPCDialog().add(s);
+    }
+    public void addNPCDialog(NPCMessage... s) {
+        getNPCDialog().addAll(List.of(s));
     }
 
-    public void addNPCDialog(NPCMessage... s) {
-        getNpcDialog().addAll(List.of(s));
+    public void addRandomNPCDialog(NPCMessage s) {
+        getRandomNPCDialog().add(s);
+    }
+
+    public void addRandomNPCDialog(NPCMessage... s) {
+        getRandomNPCDialog().addAll(List.of(s));
     }
 
     public NPCMessage getRandomNpcDialog() {
-        if (npcDialog.isEmpty()) {
+        if (randomNPCDialog.isEmpty()) {
             return null;
         }
 
         Random random = new Random();
-        int randomIndex = random.nextInt(npcDialog.size());
+        int randomIndex = random.nextInt(randomNPCDialog.size());
 
-        return npcDialog.get(randomIndex);
+        return randomNPCDialog.get(randomIndex);
     }
 
     public SentinelTrait getSentinel() {
         return sentinel;
     }
 
-    public List<NPCMessage> getNpcDialog() {
-        return npcDialog;
+    public List<NPCMessage> getRandomNPCDialog() {
+        return randomNPCDialog;
+    }
+
+    public List<NPCMessage> getNPCDialog() {
+        return NPCDialog;
     }
 
     public NPC getNpc() {
