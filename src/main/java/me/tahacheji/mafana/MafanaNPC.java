@@ -36,6 +36,10 @@ public final class MafanaNPC extends JavaPlugin {
 
     }
 
+    public MafanaNPCData getMafanaNPCData() {
+        return mafanaNPCData;
+    }
+
     public static MafanaNPC getMafanaNPC() {
         return mafanaNPC;
     }
