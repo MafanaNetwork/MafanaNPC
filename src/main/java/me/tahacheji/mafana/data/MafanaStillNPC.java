@@ -48,6 +48,7 @@ public class MafanaStillNPC implements NPCTaskEvents {
     public void setNPCSkin(String name, String signature, String texture) {
         npc.addTrait(SkinTrait.class);
         SkinTrait skinTrait = npc.getTrait(SkinTrait.class);
+        skinTrait.setShouldUpdateSkins(true);
         skinTrait.setSkinPersistent(name, signature, texture);
         skinTrait.setShouldUpdateSkins(true);
     }
