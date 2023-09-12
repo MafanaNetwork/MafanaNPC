@@ -9,6 +9,7 @@ import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.trait.Equipment;
+import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -59,14 +60,17 @@ public class MafanaCitizens {
         npc.addTrait(new ConvoTrait(role));
     }
 
-    public void setNPCSkin(String value, String texture) {
+    public void setNPCSkin(String name, String signature, String texture) {
+        npc.addTrait(SkinTrait.class);
         SkinTrait skinTrait = npc.getTrait(SkinTrait.class);
-        skinTrait.setTexture(value, texture);
+        skinTrait.setSkinPersistent(name, signature, texture);
+        skinTrait.setShouldUpdateSkins(true);
     }
 
-    public void setNPCSkinPlayer(Player player) {
-        SkinTrait skinTrait = npc.getTrait(SkinTrait.class);
-        skinTrait.setSkinName(player.getName());
+    public void setLookAtPlayer() {
+        npc.addTrait(LookClose.class);
+        LookClose lookClose = getNpc().getTrait(LookClose.class);
+        lookClose.lookClose(true);
     }
 
     public void despawnNPC() {

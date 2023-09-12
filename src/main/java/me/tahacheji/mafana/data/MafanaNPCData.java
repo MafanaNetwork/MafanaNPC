@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,8 +29,8 @@ public class MafanaNPCData extends MySQL {
     }
 
     public void addPlayer(MafanaStillNPC mafanaStillNPC, Player player) {
-        if(sqlGetter.exists(mafanaStillNPC.getNpcUUID())) {
-            List<String> s = getPlayers(mafanaStillNPC);
+        if (sqlGetter.exists(mafanaStillNPC.getNpcUUID())) {
+            List<String> s = new ArrayList<>(getPlayers(mafanaStillNPC)); // Create a new ArrayList from the unmodifiable list
             s.add(player.getUniqueId().toString());
             setPlayer(mafanaStillNPC, s);
         }
