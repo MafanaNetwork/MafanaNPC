@@ -84,6 +84,9 @@ public class MafanaNPCEntity implements NPCTaskEvents{
     public void talkNPC(Sound sound, int radius, NPCMessage... npcMessages) {
         me.tahacheji.mafana.MafanaNPC.getInstance().getMessageManager().sendMessage(sound, radius, npcMessages);
     }
+    public void talkNPC(Sound sound, int radius, float volume, float pitch, NPCMessage... npcMessages) {
+        me.tahacheji.mafana.MafanaNPC.getInstance().getMessageManager().sendMessage(sound, radius,volume,pitch, npcMessages);
+    }
 
     public void swingMainHand() {
         Player player = ((Player) npc.getEntity());

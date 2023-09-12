@@ -178,6 +178,11 @@ public class MafanaCitizens {
         me.tahacheji.mafana.MafanaNPC.getInstance().getMessageManager().sendMessage(sound, radius, npcMessages);
     }
 
+    public void talkNPC(Sound sound, int radius, float volume, float pitch, NPCMessage... npcMessages) {
+        me.tahacheji.mafana.MafanaNPC.getInstance().getMessageManager().sendMessage(sound, radius,volume,pitch, npcMessages);
+    }
+
+
     public void goOnLadder(Location location) {
         Navigator navigator = npc.getNavigator();
         navigator.setTarget(location);
