@@ -174,6 +174,9 @@ public class MafanaCitizens {
     public void facePlayer(Player player) {
         npc.faceLocation(player.getLocation());
     }
+    public void talkNPC(Sound sound, int radius, NPCMessage... npcMessages) {
+        me.tahacheji.mafana.MafanaNPC.getInstance().getMessageManager().sendMessage(sound, radius, npcMessages);
+    }
 
     public void goOnLadder(Location location) {
         Navigator navigator = npc.getNavigator();

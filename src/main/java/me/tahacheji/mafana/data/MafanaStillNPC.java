@@ -11,6 +11,7 @@ import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -73,6 +74,10 @@ public class MafanaStillNPC implements NPCTaskEvents {
 
     public void talkNPC(NPCMessage... npcMessages) {
         me.tahacheji.mafana.MafanaNPC.getInstance().getMessageManager().sendMessage(npcMessages);
+    }
+
+    public void talkNPC(Sound sound, int radius, NPCMessage... npcMessages) {
+        me.tahacheji.mafana.MafanaNPC.getInstance().getMessageManager().sendMessage(sound, radius, npcMessages);
     }
 
     public void swingMainHand() {
