@@ -1,7 +1,10 @@
 package me.tahacheji.mafana.util;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import me.tahacheji.mafana.MafanaNPC;
 import me.tahacheji.mafana.data.MafanaCitizens;
+import me.tahacheji.mafana.data.MafanaNPCPlayer;
 import me.tahacheji.mafana.data.MafanaStillNPC;
 import me.tahacheji.mafana.data.MafanaTask;
 import net.citizensnpcs.api.npc.NPC;
@@ -17,15 +20,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class NPCUtil {
-
-    private final String ALGORITHM = "AES";
-    private final String CIPHER_INSTANCE = "AES/ECB/PKCS5Padding";
-    private final Key SECRET_KEY;
-
-    public NPCUtil() {
-        SECRET_KEY = getSecretKey("mafana");
-    }
-
 
     public boolean isNPC(Entity entity) {
         return entity.hasMetadata("NPC");
@@ -81,37 +75,14 @@ public class NPCUtil {
         }
     }
 
-    private Key getSecretKey(String keyString) {
-        // Generate a secret key from the provided keyString
-        byte[] keyBytes = Arrays.copyOf(keyString.getBytes(StandardCharsets.UTF_8), 16); // AES keys are 128 bits (16 bytes)
-        return new SecretKeySpec(keyBytes, ALGORITHM);
+    public String compressMafanaNPCPlayer(List<MafanaNPCPlayer> mafanaNPCPlayers) {
+        Gson gson = new Gson();
+        return gson.toJson(mafanaNPCPlayers);
     }
 
-    public String encryptList(List<String> list) {
-        try {
-            Cipher cipher = Cipher.getInstance(CIPHER_INSTANCE);
-            cipher.init(Cipher.ENCRYPT_MODE, SECRET_KEY);
-
-            String serializedList = String.join(",", list);
-            byte[] encryptedBytes = cipher.doFinal(serializedList.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(encryptedBytes);
-        } catch (Exception e) {
-            return null;
-        }
+    public List<MafanaNPCPlayer> decompressMafanaNPCPlayer(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, new TypeToken<List<MafanaNPCPlayer>>() {}.getType());
     }
 
-    public List<String> decryptToList(String encryptedString) {
-        try {
-            Cipher cipher = Cipher.getInstance(CIPHER_INSTANCE);
-            cipher.init(Cipher.DECRYPT_MODE, SECRET_KEY);
-
-            byte[] encryptedBytes = Base64.getDecoder().decode(encryptedString);
-            byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-            String decryptedString = new String(decryptedBytes, StandardCharsets.UTF_8);
-
-            return Arrays.asList(decryptedString.split(","));
-        } catch (Exception e) {
-            return new ArrayList<>(); // Return an empty list if decryption fails
-        }
-    }
 }
