@@ -30,21 +30,24 @@ public class MafanaNPCData extends MySQL {
 
     public void addPlayer(MafanaStillNPC mafanaStillNPC, Player player) {
         if (sqlGetter.exists(mafanaStillNPC.getNpcUUID())) {
-            List<MafanaNPCPlayer> s = new ArrayList<>(getPlayers(mafanaStillNPC)); // Create a new ArrayList from the unmodifiable list
+            List<MafanaNPCPlayer> s = new ArrayList<>(getPlayers(mafanaStillNPC));
+            if (s == null) {
+                s = new ArrayList<>(); // Initialize an empty list if it's null
+            }
             s.add(new MafanaNPCPlayer(player.getUniqueId(), "0"));
             setPlayer(mafanaStillNPC, s);
         }
     }
 
     public void setPlayerValue(MafanaStillNPC mafanaStillNPC, Player player, String value) {
-        if(sqlGetter.exists(mafanaStillNPC.getNpcUUID())) {
-            if(existPlayer(mafanaStillNPC, player)) {
-                if(getPlayers(mafanaStillNPC) == null) {
-                    return;
+        if (sqlGetter.exists(mafanaStillNPC.getNpcUUID())) {
+            if (existPlayer(mafanaStillNPC, player)) {
+                List<MafanaNPCPlayer> npcPlayers = getPlayers(mafanaStillNPC);
+                if (npcPlayers == null) {
+                    npcPlayers = new ArrayList<>(); // Initialize an empty list if it's null
                 }
                 MafanaNPCPlayer mafanaNPCPlayer = getPlayer(mafanaStillNPC, player);
-                if(mafanaNPCPlayer != null) {
-                    List<MafanaNPCPlayer> npcPlayers = getPlayers(mafanaStillNPC);
+                if (mafanaNPCPlayer != null) {
                     npcPlayers.remove(mafanaNPCPlayer);
                     npcPlayers.add(new MafanaNPCPlayer(player.getUniqueId(), value));
                     setPlayer(mafanaStillNPC, npcPlayers);
@@ -54,13 +57,13 @@ public class MafanaNPCData extends MySQL {
     }
 
     public boolean existPlayer(MafanaStillNPC mafanaStillNPC, Player player) {
-        if(sqlGetter.exists(mafanaStillNPC.getNpcUUID())) {
-            if(getPlayers(mafanaStillNPC) == null) {
-                return false;
-            }
-            for(MafanaNPCPlayer mafanaNPCPlayer : getPlayers(mafanaStillNPC)) {
-                if(mafanaNPCPlayer.getPlayer().toString().equalsIgnoreCase(player.getUniqueId().toString())) {
-                    return true;
+        if (sqlGetter.exists(mafanaStillNPC.getNpcUUID())) {
+            List<MafanaNPCPlayer> players = getPlayers(mafanaStillNPC);
+            if (players != null) {
+                for (MafanaNPCPlayer mafanaNPCPlayer : players) {
+                    if (mafanaNPCPlayer.getPlayer().toString().equalsIgnoreCase(player.getUniqueId().toString())) {
+                        return true;
+                    }
                 }
             }
         }
@@ -68,16 +71,17 @@ public class MafanaNPCData extends MySQL {
     }
 
     public MafanaNPCPlayer getPlayer(MafanaStillNPC mafanaStillNPC, Player player) {
-        if(getPlayers(mafanaStillNPC) == null) {
-            return null;
-        }
-        for(MafanaNPCPlayer mafanaNPCPlayer : getPlayers(mafanaStillNPC)) {
-            if(mafanaNPCPlayer.getPlayer().toString().equalsIgnoreCase(player.getUniqueId().toString())) {
-                return mafanaNPCPlayer;
+        List<MafanaNPCPlayer> players = getPlayers(mafanaStillNPC);
+        if (players != null) {
+            for (MafanaNPCPlayer mafanaNPCPlayer : players) {
+                if (mafanaNPCPlayer.getPlayer().toString().equalsIgnoreCase(player.getUniqueId().toString())) {
+                    return mafanaNPCPlayer;
+                }
             }
         }
         return null;
     }
+
 
     public void setPlayer(MafanaStillNPC mafanaStillNPC, List<MafanaNPCPlayer> s) {
         sqlGetter.setString(new MysqlValue("PLAYERS", mafanaStillNPC.getNpcUUID(), new NPCUtil().compressMafanaNPCPlayer(s)));

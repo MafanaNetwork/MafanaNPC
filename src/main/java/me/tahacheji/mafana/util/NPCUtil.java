@@ -1,12 +1,14 @@
 package me.tahacheji.mafana.util;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import me.tahacheji.mafana.MafanaNPC;
 import me.tahacheji.mafana.data.MafanaCitizens;
 import me.tahacheji.mafana.data.MafanaNPCPlayer;
 import me.tahacheji.mafana.data.MafanaStillNPC;
 import me.tahacheji.mafana.data.MafanaTask;
+import me.tahacheji.mafana.data.adapter.MafanaNPCPlayerTypeAdapter;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -20,6 +22,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class NPCUtil {
+
+    private final Gson gson;
+
+    public NPCUtil() {
+        // Create a Gson instance with custom TypeAdapter
+        gson = new GsonBuilder()
+                .registerTypeAdapter(MafanaNPCPlayer.class, new MafanaNPCPlayerTypeAdapter())
+                .create();
+    }
 
     public boolean isNPC(Entity entity) {
         return entity.hasMetadata("NPC");
@@ -76,12 +87,10 @@ public class NPCUtil {
     }
 
     public String compressMafanaNPCPlayer(List<MafanaNPCPlayer> mafanaNPCPlayers) {
-        Gson gson = new Gson();
         return gson.toJson(mafanaNPCPlayers);
     }
 
     public List<MafanaNPCPlayer> decompressMafanaNPCPlayer(String json) {
-        Gson gson = new Gson();
         return gson.fromJson(json, new TypeToken<List<MafanaNPCPlayer>>() {}.getType());
     }
 
