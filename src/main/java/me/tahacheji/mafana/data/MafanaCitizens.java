@@ -29,6 +29,7 @@ public class MafanaCitizens {
 
     private final String name;
     private final NPC npc;
+    private String npcFakeName;
 
     private final UUID npcUUID;
 
@@ -50,6 +51,7 @@ public class MafanaCitizens {
 
     public MafanaCitizens(String name) {
         this.name = name;
+        this.npcFakeName = ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "Citizen" + ChatColor.DARK_GRAY + "] " + name;
         this.npc = registry.createNPC(EntityType.PLAYER, ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "Citizen" + ChatColor.DARK_GRAY + "] " + name);
         this.npcUUID = npc.getUniqueId();
     }
@@ -490,6 +492,71 @@ public class MafanaCitizens {
 
         return validBlockLocations;
     }
+
+    public NPCRegistry getRegistry() {
+        return registry;
+    }
+
+    public void setNpcFakeName(String npcFakeName) {
+        this.npcFakeName = npcFakeName;
+    }
+
+    public void setDefaultPointLocation(Location defaultPointLocation) {
+        this.defaultPointLocation = defaultPointLocation;
+    }
+
+    public void setTaskEvents(List<MafanaTask> taskEvents) {
+        this.taskEvents = taskEvents;
+    }
+
+    public void setWalkingTo(boolean walkingTo) {
+        isWalkingTo = walkingTo;
+    }
+
+    public void setWalkTo(BukkitTask walkTo) {
+        this.walkTo = walkTo;
+    }
+
+    public void setCurrentTask(MafanaTask currentTask) {
+        this.currentTask = currentTask;
+    }
+
+    public void setResumeWalkTime(long resumeWalkTime) {
+        this.resumeWalkTime = resumeWalkTime;
+    }
+
+    public void setCurrentPointIndex(int currentPointIndex) {
+        this.currentPointIndex = currentPointIndex;
+    }
+
+    public String getNpcFakeName() {
+        return npcFakeName;
+    }
+
+    public Location getDefaultPointLocation() {
+        return defaultPointLocation;
+    }
+
+    public boolean isWalkingTo() {
+        return isWalkingTo;
+    }
+
+    public BukkitTask getWalkTo() {
+        return walkTo;
+    }
+
+    public MafanaTask getCurrentTask() {
+        return currentTask;
+    }
+
+    public long getResumeWalkTime() {
+        return resumeWalkTime;
+    }
+
+    public int getCurrentPointIndex() {
+        return currentPointIndex;
+    }
+
     public List<MafanaTask> getTaskEvents() {
         return taskEvents;
     }

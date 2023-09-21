@@ -1,7 +1,9 @@
 package me.tahacheji.mafana.data;
 
 import me.tahacheji.mafana.MafanaNPC;
+import me.tahacheji.mafana.util.NPCUtil;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -37,7 +39,13 @@ public class MessageManager {
                             }
                             ArmorStand armorStand = spawnMessageArmorStand(npcMessage.getNpc(), npcMessage.getMessage());
                             for(Player player : npcMessage.getNpc().getEntity().getLocation().getNearbyPlayers(5)) {
-                                player.sendMessage(npcMessage.getNpc().getName() + ": " + npcMessage.getMessage());
+                                if(new NPCUtil().getMafanaStillNPC(npcMessage.getNpc()) != null) {
+                                    player.sendMessage(new NPCUtil().getMafanaStillNPC(npcMessage.getNpc()).getNpcFakeName() + ChatColor.DARK_GRAY + ": " + npcMessage.getMessage());
+                                } else if (new NPCUtil().getMafanaCitizens(npcMessage.getNpc()) != null) {
+                                    player.sendMessage(new NPCUtil().getMafanaCitizens(npcMessage.getNpc()).getNpcFakeName() + ChatColor.DARK_GRAY + ": " + npcMessage.getMessage());
+                                } else {
+                                    player.sendMessage(npcMessage.getNpc().getName() + ": " + npcMessage.getMessage());
+                                }
                             }
                             armorStandList.add(0, armorStand); // Add at the beginning of the list
                             if (armorStandList.size() > MAX_ARMOR_STANDS) {
@@ -79,7 +87,13 @@ public class MessageManager {
                             ArmorStand armorStand = spawnMessageArmorStand(npcMessage.getNpc(), npcMessage.getMessage());
                             for(Player player : npcMessage.getNpc().getEntity().getLocation().getNearbyPlayers(radius)) {
                                 player.playSound(player.getLocation(), sound, volume, pitch);
-                                player.sendMessage(npcMessage.getNpc().getName() + ": " + npcMessage.getMessage());
+                                if(new NPCUtil().getMafanaStillNPC(npcMessage.getNpc()) != null) {
+                                    player.sendMessage(new NPCUtil().getMafanaStillNPC(npcMessage.getNpc()).getNpcFakeName() + ChatColor.DARK_GRAY + ": " + npcMessage.getMessage());
+                                } else if (new NPCUtil().getMafanaCitizens(npcMessage.getNpc()) != null) {
+                                    player.sendMessage(new NPCUtil().getMafanaCitizens(npcMessage.getNpc()).getNpcFakeName() + ChatColor.DARK_GRAY + ": " + npcMessage.getMessage());
+                                } else {
+                                    player.sendMessage(npcMessage.getNpc().getName() + ": " + npcMessage.getMessage());
+                                }
                             }
                             armorStandList.add(0, armorStand); // Add at the beginning of the list
                             if (armorStandList.size() > MAX_ARMOR_STANDS) {
@@ -121,7 +135,13 @@ public class MessageManager {
                             ArmorStand armorStand = spawnMessageArmorStand(npcMessage.getNpc(), npcMessage.getMessage());
                             for(Player player : npcMessage.getNpc().getEntity().getLocation().getNearbyPlayers(radius)) {
                                 player.playSound(player.getLocation(), sound, 1, 1);
-                                player.sendMessage(npcMessage.getNpc().getName() + ": " + npcMessage.getMessage());
+                                if(new NPCUtil().getMafanaStillNPC(npcMessage.getNpc()) != null) {
+                                    player.sendMessage(new NPCUtil().getMafanaStillNPC(npcMessage.getNpc()).getNpcFakeName() + ChatColor.DARK_GRAY + ": " + npcMessage.getMessage());
+                                } else if (new NPCUtil().getMafanaCitizens(npcMessage.getNpc()) != null) {
+                                    player.sendMessage(new NPCUtil().getMafanaCitizens(npcMessage.getNpc()).getNpcFakeName() + ChatColor.DARK_GRAY + ": " + npcMessage.getMessage());
+                                } else {
+                                    player.sendMessage(npcMessage.getNpc().getName() + ": " + npcMessage.getMessage());
+                                }
                             }
                             armorStandList.add(0, armorStand); // Add at the beginning of the list
                             if (armorStandList.size() > MAX_ARMOR_STANDS) {

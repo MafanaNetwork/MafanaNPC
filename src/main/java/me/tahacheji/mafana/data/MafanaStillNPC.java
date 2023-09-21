@@ -25,6 +25,7 @@ import java.util.UUID;
 public class MafanaStillNPC implements NPCTaskEvents {
 
     private final String name;
+    private String npcFakeName;
 
     private final NPC npc;
 
@@ -37,6 +38,7 @@ public class MafanaStillNPC implements NPCTaskEvents {
 
     public MafanaStillNPC(String name) {
         this.name = name;
+        this.npcFakeName = ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "NPC" + ChatColor.DARK_GRAY + "] " + name;
         this.npc = registry.createNPC(EntityType.PLAYER, ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "NPC" + ChatColor.DARK_GRAY + "] " + name);
         this.npcUUID = new NPCUtil().stringToUUID(name);
     }
@@ -193,6 +195,26 @@ public class MafanaStillNPC implements NPCTaskEvents {
         int randomIndex = random.nextInt(npcDialog.size());
 
         return npcDialog.get(randomIndex);
+    }
+
+    public NPCRegistry getRegistry() {
+        return registry;
+    }
+
+    public String getNpcFakeName() {
+        return npcFakeName;
+    }
+
+    public void setDefaultPointLocation(Location defaultPointLocation) {
+        this.defaultPointLocation = defaultPointLocation;
+    }
+
+    public void setNpcDialog(List<NPCMessage> npcDialog) {
+        this.npcDialog = npcDialog;
+    }
+
+    public void setNpcFakeName(String npcFakeName) {
+        this.npcFakeName = npcFakeName;
     }
 
     public List<NPCMessage> getNpcDialog() {
