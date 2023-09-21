@@ -36,6 +36,9 @@ public class MessageManager {
                                 stand.teleport(newLocation);
                             }
                             ArmorStand armorStand = spawnMessageArmorStand(npcMessage.getNpc(), npcMessage.getMessage());
+                            for(Player player : npcMessage.getNpc().getEntity().getLocation().getNearbyPlayers(5)) {
+                                player.sendMessage(npcMessage.getNpc().getName() + ": " + npcMessage.getMessage());
+                            }
                             armorStandList.add(0, armorStand); // Add at the beginning of the list
                             if (armorStandList.size() > MAX_ARMOR_STANDS) {
                                 ArmorStand oldestArmorStand = armorStandList.remove(armorStandList.size() - 1);
@@ -76,6 +79,7 @@ public class MessageManager {
                             ArmorStand armorStand = spawnMessageArmorStand(npcMessage.getNpc(), npcMessage.getMessage());
                             for(Player player : npcMessage.getNpc().getEntity().getLocation().getNearbyPlayers(radius)) {
                                 player.playSound(player.getLocation(), sound, volume, pitch);
+                                player.sendMessage(npcMessage.getNpc().getName() + ": " + npcMessage.getMessage());
                             }
                             armorStandList.add(0, armorStand); // Add at the beginning of the list
                             if (armorStandList.size() > MAX_ARMOR_STANDS) {
@@ -117,6 +121,7 @@ public class MessageManager {
                             ArmorStand armorStand = spawnMessageArmorStand(npcMessage.getNpc(), npcMessage.getMessage());
                             for(Player player : npcMessage.getNpc().getEntity().getLocation().getNearbyPlayers(radius)) {
                                 player.playSound(player.getLocation(), sound, 1, 1);
+                                player.sendMessage(npcMessage.getNpc().getName() + ": " + npcMessage.getMessage());
                             }
                             armorStandList.add(0, armorStand); // Add at the beginning of the list
                             if (armorStandList.size() > MAX_ARMOR_STANDS) {
