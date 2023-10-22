@@ -113,7 +113,7 @@
         <dependency>
             <groupId>com.github.MaskedWasTaken</groupId>
             <artifactId>MafanaMysqlAPI-Remake</artifactId>
-            <version>1.6</version>
+            <version>1.9</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

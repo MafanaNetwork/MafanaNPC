@@ -2,6 +2,7 @@ package me.tahacheji.mafana.data;
 
 import me.tahacheji.mafana.util.NPCUtil;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
@@ -54,6 +55,25 @@ public class MafanaStillNPC implements NPCTaskEvents {
         skinTrait.setShouldUpdateSkins(true);
         skinTrait.setSkinPersistent(name, signature, texture);
         skinTrait.setShouldUpdateSkins(true);
+    }
+
+    public void walkTo(Location location) {
+        Navigator navigator = npc.getNavigator();
+        navigator.setTarget(location);
+        npc.data().set(NPC.Metadata.PATHFINDER_OPEN_DOORS, true);
+    }
+
+    public void runTo(Location location) {
+        Navigator navigator = npc.getNavigator();
+        navigator.setTarget(location);
+        navigator.getLocalParameters().speedModifier(2); // Increase the speed for running
+        npc.data().set(NPC.Metadata.PATHFINDER_OPEN_DOORS, true);
+    }
+
+    public void sneakTo(Location location) {
+        Navigator navigator = npc.getNavigator();
+        navigator.setTarget(location);
+        npc.data().set(NPC.Metadata.SNEAKING, true);
     }
 
     public void setLookAtPlayer() {
