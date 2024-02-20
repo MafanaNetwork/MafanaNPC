@@ -25,7 +25,7 @@ public final class MafanaNPC extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ConvoTrait.class));
+        //CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ConvoTrait.class));
         mafanaNPC = this;
         messageManager = new MessageManager();
         mafanaNPCData = new MafanaNPCData();
