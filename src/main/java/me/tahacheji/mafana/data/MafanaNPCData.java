@@ -20,65 +20,68 @@ public class MafanaNPCData extends MySQL {
     public CompletableFuture<Void> addNPC(MafanaStillNPC mafanaStillNPC) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                if(!sqlGetter.existsAsync(mafanaStillNPC.getNpcUUID()).get()) {
+                if (!sqlGetter.existsAsync(mafanaStillNPC.getNpcUUID()).join()) {
                     UUID uuid = mafanaStillNPC.getNpcUUID();
-                    sqlGetter.setStringAsync(new DatabaseValue("NPCNAME", uuid, mafanaStillNPC.getName()));
-                    sqlGetter.setStringAsync(new DatabaseValue("PLAYERS", uuid, ""));
+                    sqlGetter.setStringAsync(new DatabaseValue("NPCNAME", uuid, mafanaStillNPC.getName())).join();
+                    sqlGetter.setStringAsync(new DatabaseValue("PLAYERS", uuid, "")).join();
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             return null;
         });
     }
+
 
     public CompletableFuture<Void> addPlayer(MafanaStillNPC mafanaStillNPC, Player player) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                if (sqlGetter.existsAsync(mafanaStillNPC.getNpcUUID()).get()) {
-                    List<MafanaNPCPlayer> s = getPlayers(mafanaStillNPC).get();
+                if (sqlGetter.existsAsync(mafanaStillNPC.getNpcUUID()).join()) {
+                    List<MafanaNPCPlayer> s = getPlayers(mafanaStillNPC).join();
                     if (s == null) {
                         s = new ArrayList<>();
                     }
                     s.add(new MafanaNPCPlayer(player.getUniqueId(), "0"));
-                    setPlayer(mafanaStillNPC, s);
+                    setPlayer(mafanaStillNPC, s).join();
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             return null;
         });
     }
+
 
     public CompletableFuture<Void> setPlayerValue(MafanaStillNPC mafanaStillNPC, Player player, String value) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                if (sqlGetter.existsAsync(mafanaStillNPC.getNpcUUID()).get()) {
-                    if (existPlayer(mafanaStillNPC, player).get()) {
-                        List<MafanaNPCPlayer> npcPlayers = getPlayers(mafanaStillNPC).get();
+                if (sqlGetter.existsAsync(mafanaStillNPC.getNpcUUID()).join()) {
+                    if (existPlayer(mafanaStillNPC, player).join()) {
+                        List<MafanaNPCPlayer> npcPlayers = getPlayers(mafanaStillNPC).join();
                         if (npcPlayers == null) {
                             npcPlayers = new ArrayList<>();
                         }
-                        MafanaNPCPlayer mafanaNPCPlayer = getPlayer(mafanaStillNPC, player).get();
+                        MafanaNPCPlayer mafanaNPCPlayer = getPlayer(mafanaStillNPC, player).join();
                         if (mafanaNPCPlayer != null) {
                             npcPlayers.remove(mafanaNPCPlayer);
                             npcPlayers.add(new MafanaNPCPlayer(player.getUniqueId(), value));
-                            setPlayer(mafanaStillNPC, npcPlayers);
+                            setPlayer(mafanaStillNPC, npcPlayers).join();
                         }
                     }
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             return null;
         });
     }
 
+
     public CompletableFuture<Boolean> existPlayer(MafanaStillNPC mafanaStillNPC, Player player) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                if (sqlGetter.existsAsync(mafanaStillNPC.getNpcUUID()).get()) {
-                    List<MafanaNPCPlayer> players = getPlayers(mafanaStillNPC).get();
+                if (sqlGetter.existsAsync(mafanaStillNPC.getNpcUUID()).join()) {
+                    List<MafanaNPCPlayer> players = getPlayers(mafanaStillNPC).join();
                     if (players != null) {
                         for (MafanaNPCPlayer mafanaNPCPlayer : players) {
                             if (mafanaNPCPlayer.getPlayer().toString().equalsIgnoreCase(player.getUniqueId().toString())) {
@@ -87,12 +90,13 @@ public class MafanaNPCData extends MySQL {
                         }
                     }
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             return false;
         });
     }
+
 
     public CompletableFuture<MafanaNPCPlayer> getPlayer(MafanaStillNPC mafanaStillNPC, Player player) {
         CompletableFuture<MafanaNPCPlayer> x = new CompletableFuture<>();
