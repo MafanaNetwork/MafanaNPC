@@ -128,12 +128,8 @@ public class MafanaNPCData extends MySQL {
         });
         return x;
     }
-
-
-    @Override
     public void connect() {
-        super.connect();
-        if (this.isConnected()) sqlGetter.createTable("player_npc_talk",
+        sqlGetter.createTable("player_npc_talk",
                 new DatabaseValue("NPCNAME", ""),
                 new DatabaseValue("PLAYERS", ""));
     }

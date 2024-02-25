@@ -36,6 +36,11 @@ public final class MafanaNPC extends JavaPlugin {
 
     }
 
+    @Override
+    public void onDisable() {
+        mafanaNPCData.close();
+    }
+
     public MafanaNPCData getMafanaNPCData() {
         return mafanaNPCData;
     }
